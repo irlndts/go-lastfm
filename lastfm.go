@@ -29,7 +29,6 @@ func New(apiKey string) (*Client, error) {
 }
 
 func request(params url.Values, resp interface{}) error {
-	fmt.Println(lastfmAPI + "?" + params.Encode())
 	r, err := http.NewRequest("GET", lastfmAPI+"?"+params.Encode(), nil)
 	if err != nil {
 		return err
