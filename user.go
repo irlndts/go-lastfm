@@ -19,13 +19,13 @@ type TopArtistsResponse struct {
 	TopArtists struct {
 		Artists []struct {
 			Name      string `json:"name"`
-			Playcount string `json:"playcount"`
+			Playcount int    `json:"playcount"`
 		} `json:"artist"`
 		Attributes struct {
-			Page       string `json:"page"`
-			PerPage    string `json:"perPage"`
-			TotalPages string `json:"totalPages"`
-			Total      string `json:"total"`
+			Page       int `json:"page"`
+			PerPage    int `json:"perPage"`
+			TotalPages int `json:"totalPages"`
+			Total      int `json:"total"`
 		} `json:"@attr"`
 	} `json:"topartists"`
 }
@@ -47,37 +47,16 @@ type Artist struct {
 
 // topartists converts response to TopArtists
 func (r *TopArtistsResponse) topartists() (*TopArtists, error) {
-	page, err := strconv.Atoi(r.TopArtists.Attributes.Page)
-	if err != nil {
-		return nil, err
-	}
-	perPage, err := strconv.Atoi(r.TopArtists.Attributes.PerPage)
-	if err != nil {
-		return nil, err
-	}
-	totalPages, err := strconv.Atoi(r.TopArtists.Attributes.TotalPages)
-	if err != nil {
-		return nil, err
-	}
-	total, err := strconv.Atoi(r.TopArtists.Attributes.Total)
-	if err != nil {
-		return nil, err
-	}
-
 	top := &TopArtists{
-		Page:       page,
-		PerPage:    perPage,
-		TotalPages: totalPages,
-		Total:      total,
+		Page:       r.TopArtists.Attributes.Page,
+		PerPage:    r.TopArtists.Attributes.PerPage,
+		TotalPages: r.TopArtists.Attributes.TotalPages,
+		Total:      r.TopArtists.Attributes.Total,
 	}
 
 	if top.Total != 0 {
 		for _, artist := range r.TopArtists.Artists {
-			playcount, err := strconv.Atoi(artist.Playcount)
-			if err != nil {
-				return nil, err
-			}
-			top.Artists = append(top.Artists, Artist{Name: artist.Name, Playcount: playcount})
+			top.Artists = append(top.Artists, Artist{Name: artist.Name, Playcount: artist.Playcount})
 		}
 	}
 
